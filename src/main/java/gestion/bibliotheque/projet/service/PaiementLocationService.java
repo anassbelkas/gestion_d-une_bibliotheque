@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -47,11 +48,13 @@ public class PaiementLocationService {
 
         if (location.getRef() == null)
             return -2;
-        else if (location.getTotalPaye() + paiementLocation.getMontant() > location.getTotal())
+        else if (location.getTotal().subtract(paiementLocation.getMontant()).compareTo(BigDecimal.ZERO)<0)
             return -3;
         else {
-            double nvTotalPaye = location.getTotalPaye() + paiementLocation.getMontant();
+            BigDecimal nvTotalPaye = location.getTotalPaye().add(paiementLocation.getMontant());
+            BigDecimal nvTotal = location.getTotal().subtract(paiementLocation.getMontant());
             location.setTotalPaye(nvTotalPaye);
+            location.setTotal(nvTotal);
             locationService.update(location);
             paiementLocationDao.save(paiementLocation);
 

@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("gestion-biblio/Achat")
 public class AchatRest {
-    @GetMapping("/ref/{ref}")
+    @GetMapping("/achatref/{ref}")
     public Achat findByRef(@PathVariable String ref) {
         return achatService.findByRef(ref);
     }
-    @DeleteMapping("/ref/{ref}")
+    @DeleteMapping("/achatref_delete/{ref}")
     public int deleteByRef(@PathVariable String ref) {
         return achatService.deleteByRef(ref);
     }

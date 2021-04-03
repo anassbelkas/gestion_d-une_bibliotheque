@@ -1,7 +1,10 @@
 package gestion.bibliotheque.projet.bean;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -11,8 +14,11 @@ public class PaiementLocation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String ref;
-    private double montant;
+    private BigDecimal montant;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date datePaiment;
+
     private String codePaiment;// le type de paiment : especes,virment bancaire ...
 
 
@@ -36,11 +42,11 @@ public class PaiementLocation {
         this.ref = ref;
     }
 
-    public double getMontant() {
+    public BigDecimal getMontant() {
         return montant;
     }
 
-    public void setMontant(double montant) {
+    public void setMontant(BigDecimal montant) {
         this.montant = montant;
     }
 

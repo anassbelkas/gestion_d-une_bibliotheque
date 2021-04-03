@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("gestion-biblio/PaiementLocation")
 public class PaiementLocationRest {
 
-    @GetMapping("/ref/{ref}")
+    @GetMapping("/paymentlocationref/{ref}")
     public PaiementLocation findByRef(@PathVariable String ref) {
         return paiementLocationService.findByRef(ref);
     }
 
-    @DeleteMapping("/ref/{ref}")
+    @DeleteMapping("/paymentlocationref-delete/{ref}")
     public int deleteByRef(@PathVariable String ref) {
         return paiementLocationService.deleteByRef(ref);
     }
@@ -26,22 +27,22 @@ public class PaiementLocationRest {
         return paiementLocationService.getOne(id);
     }
 
-    @PostMapping("/paiementLoaction/{paiementLoaction}")
+    @PostMapping("/")
     public int save(@RequestBody PaiementLocation paiementLocation) {
         return paiementLocationService.save(paiementLocation);
     }
 
-    @PutMapping("/paiementLocation/{paiementLoaction}")
+    @PutMapping("/")
     public int update(@RequestBody PaiementLocation paiementLocation) {
         return paiementLocationService.update(paiementLocation);
     }
 
-    @GetMapping("/reference/{ref}")
+    @GetMapping("/locationreference/{ref}")
     public List<PaiementLocation> findByLocationRef(@PathVariable String ref) {
         return paiementLocationService.findByLocationRef(ref);
     }
 
-    @DeleteMapping("/refer/{ref}")
+    @DeleteMapping("/locationreference-delete/{ref}")
     public int deleteByLocationRef(@PathVariable String ref) {
         return paiementLocationService.deleteByLocationRef(ref);
     }

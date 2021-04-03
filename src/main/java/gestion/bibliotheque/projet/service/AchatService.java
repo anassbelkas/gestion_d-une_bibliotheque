@@ -1,10 +1,14 @@
 package gestion.bibliotheque.projet.service;
 
 import gestion.bibliotheque.projet.bean.Achat;
+import gestion.bibliotheque.projet.bean.AchatDoc;
+import gestion.bibliotheque.projet.bean.PaiementAchat;
 import gestion.bibliotheque.projet.dao.AchatDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -14,29 +18,49 @@ public class AchatService {
         return achatDao.findByRef(ref);
     }
 
-    @Transactional
-    public int deleteByRef(String ref) {
-        int resultachatlivre = achatLivreService.deleteByAchatRef(ref);
-        int resultachatDictionnaire = achatDictionnaireService.deleteByAchatRef(ref);
-        int resultachatMagazine = achatMagazineService.deleteByAchatRef(ref);
-        int resultachatPaiemenet = paiementAchatService.deleteByAchatRef(ref);
-        int resultachat = achatDao.deleteByRef(ref);
-        return resultachatlivre+resultachatDictionnaire+resultachatMagazine+resultachatPaiemenet+resultachat;
-    }
-
     public List<Achat> findAll() {
         return achatDao.findAll();
     }
+
+
 
     public int save(Achat achat) {
         if (findByRef(achat.getRef())!=null)
             return -1 ;
 
         else {
+            prepare(achat);
+
             achatDao.save(achat);
+            achatDocService.save(achat,achat.getAchatDocs());
+
             return 1 ;
         }
     }
+
+    private void prepare(Achat achat) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (AchatDoc achatDoc : achat.getAchatDocs()){
+            total = total.add(achatDoc.getPrixUnitaire().multiply(achatDoc.getQte()));
+        }
+        achat.setTotal(total);
+
+        if (achat.getTotalPaye() == null){
+            achat.setTotalPaye(BigDecimal.ZERO);
+        }
+
+    }
+
+
+    @Transactional
+    public int deleteByRef(String ref) {
+        int resultachatDoc = achatDocService.deleteByAchatRef(ref);
+        int resultachatPaiemenet = paiementAchatService.deleteByAchatRef(ref);
+        int resultachat = achatDao.deleteByRef(ref);
+        return resultachatDoc+resultachatPaiemenet+resultachat;
+    }
+
+
 
     public int update (Achat achat){
         if (findByRef(achat.getRef())==null)
@@ -52,13 +76,7 @@ public class AchatService {
     private AchatDao achatDao ;
 
     @Autowired
-    private AchatLivreService achatLivreService;
-
-    @Autowired
-    private AchatDictionnaireService achatDictionnaireService;
-
-    @Autowired
-    private AchatMagazineService achatMagazineService;
+    private AchatDocService achatDocService;
 
     @Autowired
     private PaiementAchatService paiementAchatService;

@@ -1,25 +1,25 @@
 package gestion.bibliotheque.projet.bean;
 
-
 import javax.persistence.*;
-import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
-public class AchatMagazine implements Serializable {
+public class AchatDoc {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String ref;
-    private String refBiblio;
-    private double qte;
-    private double prixUnitaire;
-    private double prixTotal;
+    private BigDecimal qte;
+    private BigDecimal prixUnitaire;
+    private BigDecimal prixTotal;
 
     @ManyToOne
     private Achat achat;
 
     @ManyToOne
-    private Magazine magazine;
+    private Documents documents;
+
 
     public Long getId() {
         return id;
@@ -37,35 +37,27 @@ public class AchatMagazine implements Serializable {
         this.ref = ref;
     }
 
-    public String getRefBiblio() {
-        return refBiblio;
-    }
-
-    public void setRefBiblio(String refBiblio) {
-        this.refBiblio = refBiblio;
-    }
-
-    public double getQte() {
+    public BigDecimal getQte() {
         return qte;
     }
 
-    public void setQte(double qte) {
+    public void setQte(BigDecimal qte) {
         this.qte = qte;
     }
 
-    public double getPrixUnitaire() {
+    public BigDecimal getPrixUnitaire() {
         return prixUnitaire;
     }
 
-    public void setPrixUnitaire(double prixUnitaire) {
+    public void setPrixUnitaire(BigDecimal prixUnitaire) {
         this.prixUnitaire = prixUnitaire;
     }
 
-    public double getPrixTotal() {
+    public BigDecimal getPrixTotal() {
         return prixTotal;
     }
 
-    public void setPrixTotal(double prixTotal) {
+    public void setPrixTotal(BigDecimal prixTotal) {
         this.prixTotal = prixTotal;
     }
 
@@ -77,11 +69,11 @@ public class AchatMagazine implements Serializable {
         this.achat = achat;
     }
 
-    public Magazine getMagazine() {
-        return magazine;
+    public Documents getDocuments() {
+        return documents;
     }
 
-    public void setMagazine(Magazine magazine) {
-        this.magazine = magazine;
+    public void setDocuments(Documents documents) {
+        this.documents = documents;
     }
 }

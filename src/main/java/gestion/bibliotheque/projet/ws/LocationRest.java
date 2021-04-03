@@ -7,16 +7,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("gestion-biblio/Location")
+
+@CrossOrigin
 @RestController
+@RequestMapping("gestion-biblio/Location")
 public class LocationRest {
 
-    @GetMapping("/ref/{ref}")
+    @GetMapping("/locationref/{ref}")
     public Location findByRef(@PathVariable String ref) {
         return locationService.findByRef( ref);
     }
 
-    @DeleteMapping("/ref/{ref}")
+    @DeleteMapping("/locationref-delete/{ref}")
     public int deleteByRef(@PathVariable String ref) {
         return locationService.deleteByRef(ref);
     }
@@ -24,11 +26,6 @@ public class LocationRest {
     @GetMapping("/")
     public List<Location> findAll() {
         return locationService.findAll();
-    }
-
-    @GetMapping("/id/{id}")
-    public Location getOne(@PathVariable Long id) {
-        return locationService.getOne(id);
     }
 
     @PostMapping("/")

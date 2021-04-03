@@ -1,10 +1,13 @@
 package gestion.bibliotheque.projet.service;
 
 import gestion.bibliotheque.projet.bean.Location;
+import gestion.bibliotheque.projet.bean.LocationDoc;
 import gestion.bibliotheque.projet.dao.LocationDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -15,36 +18,55 @@ public class LocationService {
         return locationDao.findByRef(ref);
     }
 
-    @Transactional
-    public int deleteByRef(String ref) {
-        int resultLocationDictionnaire = locationDictionnaireService.deleteByLocationRef(ref);
-        int resultLocationMagazine = locationMagazineService.deleteByLocationRef(ref);
-        int resultLocationLivre = locationLivreService.deleteByLocationRef(ref);
-        int resultLocationPaiemenet = paiementLocationService.deleteByLocationRef(ref);
-        int resultLocation = locationDao.deleteByRef(ref);
-
-        return resultLocationLivre+resultLocation+resultLocationDictionnaire+resultLocationMagazine+resultLocationPaiemenet;
-    }
-
     public List<Location> findAll() {
         return locationDao.findAll();
     }
 
-    public Location getOne(Long id) {
-        return locationDao.getOne(id);
-    }
-    ///////////////////////////
 
 
     public int save(Location location) {
-        if (findByRef(location.getRef()) != null)//existe deja
-            return -1;
+        if (findByRef(location.getRef())!=null)
+            return -1 ;
 
         else {
+            prepare(location);
             locationDao.save(location);
-            return 1;
+            locationDocService.save(location,location.getLocationDocs());
+            return 1 ;
         }
     }
+
+    private void prepare(Location location) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (LocationDoc locationDoc : location.getLocationDocs()){
+            total = total.add(locationDoc.getPrixUnitaire().multiply(locationDoc.getQte()));
+        }
+        location.setTotal(total);
+        if (location.getTotalPaye() == null){
+            location.setTotalPaye(BigDecimal.ZERO);
+        }
+
+    }
+
+
+
+
+
+    @Transactional
+    public int deleteByRef(String ref) {
+        int resultLocationDoc = locationDocService.deleteByLocationRef(ref);
+        int resultLocationPaiemenet = paiementLocationService.deleteByLocationRef(ref);
+        int resultLocation = locationDao.deleteByRef(ref);
+
+        return resultLocation+resultLocationPaiemenet+resultLocationDoc;
+    }
+
+
+
+    ///////////////////////////
+
+
+
 
     public int update(Location location){
         if (findByRef(location.getRef())==null)
@@ -57,15 +79,9 @@ public class LocationService {
 
     @Autowired
     private LocationDao locationDao ;
-    @Autowired
-    private LocationLivreService locationLivreService;
 
     @Autowired
-    private LocationMagazineService locationMagazineService;
-
-
-    @Autowired
-    private LocationDictionnaireService locationDictionnaireService;
+    private LocationDocService locationDocService;
 
     @Autowired
     private PaiementLocationService paiementLocationService;

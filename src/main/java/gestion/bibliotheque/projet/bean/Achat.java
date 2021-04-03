@@ -1,12 +1,14 @@
 package gestion.bibliotheque.projet.bean;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Achat implements Serializable {
@@ -14,18 +16,33 @@ public class Achat implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ;
     private String ref ;
-    private String refBiblio ;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateAchat ;
-    private double Total ;
-    private double TotalPaye;
+    private BigDecimal total ;
+    private BigDecimal totalPaye;
 
-    public double getTotalPaye() {
-        return TotalPaye;
+
+
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "achat")
+    private List<AchatDoc> achatDocs;
+
+  /*
+    public List<PaiementAchat> getPaiementAchats() {
+        return paiementAchats;
     }
 
-    public void setTotalPaye(double totalPaye) {
-        TotalPaye = totalPaye;
+    public void setPaiementAchats(List<PaiementAchat> paiementAchats) {
+        this.paiementAchats = paiementAchats;
     }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "achat")
+    private List<PaiementAchat> paiementAchats;
+
+ */
+
 
 
 
@@ -45,13 +62,6 @@ public class Achat implements Serializable {
         this.ref = ref;
     }
 
-    public String getRefBiblio() {
-        return refBiblio;
-    }
-
-    public void setRefBiblio(String refBiblio) {
-        this.refBiblio = refBiblio;
-    }
 
     public Date getDateAchat() {
         return dateAchat;
@@ -61,12 +71,27 @@ public class Achat implements Serializable {
         this.dateAchat = dateAchat;
     }
 
-    public double getTotal() {
-        return Total;
+    public BigDecimal getTotal() {
+        return total;
     }
 
-    public void setTotal(double total) {
-        Total = total;
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
+    public BigDecimal getTotalPaye() {
+        return totalPaye;
+    }
+
+    public void setTotalPaye(BigDecimal totalPaye) {
+        this.totalPaye = totalPaye;
+    }
+
+    public List<AchatDoc> getAchatDocs() {
+        return achatDocs;
+    }
+
+    public void setAchatDocs(List<AchatDoc> achatDocs) {
+        this.achatDocs = achatDocs;
+    }
 }

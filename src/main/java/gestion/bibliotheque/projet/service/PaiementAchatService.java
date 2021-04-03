@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ public class PaiementAchatService {
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-    public  int update(PaiementAchat paiementAchat) {
+    public int update(PaiementAchat paiementAchat) {
         if (findByRef(paiementAchat.getRef())==null)
             return -1 ;
         else {
@@ -42,6 +43,7 @@ public class PaiementAchatService {
             return 1;
         }
     }
+
     public  int save(PaiementAchat paiementAchat) {
         if (findByRef(paiementAchat.getRef())!=null)
             return -1 ;
@@ -49,16 +51,19 @@ public class PaiementAchatService {
             Achat achat = achatService.findByRef(paiementAchat.getAchat().getRef());
         paiementAchat.setAchat(achat);
 
-        //paiment continet la commande
+        //paiment contient la commande
         //la commande contient seulement la reference
+
 
         if (achat.getRef()== null)
             return -2 ;
-        else if (achat.getTotalPaye()+paiementAchat.getMontant()>achat.getTotal())
+        else if (achat.getTotal().subtract(paiementAchat.getMontant()).compareTo(BigDecimal.ZERO)<0 )
             return -3 ;
         else {
-            double nvTotalPaye = achat.getTotalPaye()+paiementAchat.getMontant();
+            BigDecimal nvTotalPaye = achat.getTotalPaye().add(paiementAchat.getMontant());
+            BigDecimal nvTotal = achat.getTotal().subtract(paiementAchat.getMontant());
             achat.setTotalPaye(nvTotalPaye);
+            achat.setTotal(nvTotal);
             achatService.update(achat);
 
             paiementAchatDao.save(paiementAchat);

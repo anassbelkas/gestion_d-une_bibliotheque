@@ -1,23 +1,23 @@
 package gestion.bibliotheque.projet.bean;
 
-
-
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
-public class Dictionnaire implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+public class Documents {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String type;
     private String isbn;
-    private String refBiblio;
-    private double qteStock;
-    private double qteAcheter;
-    private double qteLouer;
+    private BigDecimal qteStock;
+    private BigDecimal qteAcheter;
+    private BigDecimal qteLouer;
+
+
 
     public Long getId() {
         return id;
@@ -25,6 +25,14 @@ public class Dictionnaire implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getIsbn() {
@@ -35,37 +43,28 @@ public class Dictionnaire implements Serializable {
         this.isbn = isbn;
     }
 
-    public String getRefBiblio() {
-        return refBiblio;
-    }
 
-    public void setRefBiblio(String refBiblio) {
-        this.refBiblio = refBiblio;
-    }
-
-    public double getQteStock() {
+    public BigDecimal getQteStock() {
         return qteStock;
     }
 
-    public void setQteStock(double qteStock) {
+    public void setQteStock(BigDecimal qteStock) {
         this.qteStock = qteStock;
     }
 
-    public double getQteAcheter() {
+    public BigDecimal getQteAcheter() {
         return qteAcheter;
     }
 
-    public void setQteAcheter(double qteAcheter) {
+    public void setQteAcheter(BigDecimal qteAcheter) {
         this.qteAcheter = qteAcheter;
     }
 
-    public double getQteLouer() {
+    public BigDecimal getQteLouer() {
         return qteLouer;
     }
 
-    public void setQteLouer(double qteLouer) {
+    public void setQteLouer(BigDecimal qteLouer) {
         this.qteLouer = qteLouer;
     }
-
-
 }

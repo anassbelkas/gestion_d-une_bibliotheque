@@ -1,12 +1,14 @@
 package gestion.bibliotheque.projet.bean;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Location implements Serializable {
@@ -14,11 +16,30 @@ public class Location implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ;
     private String ref ;
-    private String refBiblio;
-    private Date dateLocation;
-    private double total ;
-    private double totalPaye;
+    private BigDecimal total ;
+    private BigDecimal totalPaye;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date dateLocation;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "location")
+    private List<LocationDoc> locationDocs;
+    /*
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "location")
+    private List<PaiementLocation> paiementLocations;
+
+    public List<PaiementLocation> getPaiementLocations() {
+        return paiementLocations;
+    }
+
+    public void setPaiementLocations(List<PaiementLocation> paiementLocations) {
+        this.paiementLocations = paiementLocations;
+    }
+
+
+     */
     public Long getId() {
         return id;
     }
@@ -35,14 +56,6 @@ public class Location implements Serializable {
         this.ref = ref;
     }
 
-    public String getRefBiblio() {
-        return refBiblio;
-    }
-
-    public void setRefBiblio(String refBiblio) {
-        this.refBiblio = refBiblio;
-    }
-
     public Date getDateLocation() {
         return dateLocation;
     }
@@ -51,19 +64,27 @@ public class Location implements Serializable {
         this.dateLocation = dateLocation;
     }
 
-    public double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
-    public double getTotalPaye() {
+    public BigDecimal getTotalPaye() {
         return totalPaye;
     }
 
-    public void setTotalPaye(double totalPaye) {
+    public void setTotalPaye(BigDecimal totalPaye) {
         this.totalPaye = totalPaye;
+    }
+
+    public List<LocationDoc> getLocationDocs() {
+        return locationDocs;
+    }
+
+    public void setLocationDocs(List<LocationDoc> locationDocs) {
+        this.locationDocs = locationDocs;
     }
 }

@@ -1,6 +1,6 @@
 package gestion.bibliotheque.projet.vo;
 
-public class AchatLivreVo {
+public class AchatDocVo {
 
     private String ref;
     private String prixTotal;
